@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Binarization</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding-top: 50px;
+        background-image: url("Project.png");
+        background-size: cover;
+        background-position: center;
+        opacity: 1; /* Adjust the opacity value as needed (0.0 to 1.0) */
+        margin: 0; /* Reset default margin */
+        height: 100vh; /* Set height to full viewport height */
+        overflow: hidden; /* Hide overflow content */
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+      }
+      .container {
+        background-color: rgba(
+          230,
+          216,
+          173,
+          0.9
+        ); /* Brown shade with opacity */
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(131, 102, 64, 0.904);
+        padding: 20px; /* Adjust the padding */
+        max-width: 500px; /* Adjust the maximum width */
+      }
+      h3 {
+        color: #5f402d;
+        text-align: center;
+        margin-bottom: 20px; /* Adjust the margin */
+      }
+      .form-group {
+        margin-bottom: 15px; /* Adjust the margin */
+      }
+      label {
+        font-weight: bold;
+        color: #5f402d;
+      }
+      input[type="file"] {
+        display: block;
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+        background-color: #fff;
+      }
+      button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+      }
+      #outputImg {
+        margin-top: 20px;
+        text-align: center;
+      }
+      #outputImg img {
+        max-width: 100%;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>Document Image Binarization</h3>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="image">Select Image:</label>
+          <input
+            type="file"
+            class="form-control-file"
+            id="image"
+            name="image"
+            accept="image/*"
+          />
+        </div>
+        <div class="form-group">
+          <label for="model">Select Model:</label>
+          <input
+            type="file"
+            class="form-control-file"
+            id="model"
+            name="model"
+            accept=".h5"
+          />
+        </div>
+        <button type="submit">Run Binarization</button>
+      </form>
+      <div id="outputImg"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          var formData = new FormData(this);
+          fetch("/binarize", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById(
+                "outputImg"
+              ).innerHTML = `<img src="${data.output_img}" alt="Output Image">`;
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+  </body>
+</html>
